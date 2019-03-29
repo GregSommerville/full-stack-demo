@@ -20,11 +20,9 @@ namespace FullStackDemo.Models.RequestHandlers
         {
             using (var context = new PeopleContext())
             {
-                // the database entities that match
                 var people = context.GetPeopleMatching(pattern);
-
-                // convert to list of DTOs via Automapper
-                return null;
+                var peopleDTOs = AutoMapper.Mapper.Map<List<PersonDTO>>(people);
+                return peopleDTOs;
             }
         }
 

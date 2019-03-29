@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using FullStackDemo.App_Start;
+using System.Web;
 using System.Web.Http;
 
 namespace FullStackDemo
@@ -8,6 +9,7 @@ namespace FullStackDemo
         protected void Application_Start()
         {
             GlobalConfiguration.Configure(WebApiConfig.Register);
+            AutoMapperConfig.DoMappings();
         }
     }
 }

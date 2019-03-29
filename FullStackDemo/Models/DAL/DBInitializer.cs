@@ -7,6 +7,7 @@ namespace FullStackDemo.Models.DAL
     {
         protected override void Seed(PeopleContext context)
         {
+            // Sample data is the first 11 presidents of the U.S.
             List<Person> defaultData = new List<Person>();
             defaultData.Add(new Person()
             {

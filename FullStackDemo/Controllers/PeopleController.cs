@@ -20,21 +20,18 @@ namespace FullStackDemo.Controllers
             return PeopleRequests.GetPeopleMatching(pattern);
         }
 
-        // add new user
         [HttpPost]
         public void Post([FromBody]string value)
         {
             throw new HttpResponseException(HttpStatusCode.BadRequest);
         }
 
-        // not used
         [HttpPut]
         public void Put(int id, [FromBody]string value)
         {
             throw new HttpResponseException(HttpStatusCode.BadRequest);
         }
 
-        // not used
         [HttpDelete]
         public void Delete(int id)
         {
