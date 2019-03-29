@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Data.Entity;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FullStackDemo.Models.DAL
 {
@@ -9,6 +11,12 @@ namespace FullStackDemo.Models.DAL
         public int GetNumberOfPeople()
         {
             return People.Count();
+        }
+
+        public async Task<int> GetNumberOfPeopleAsync()
+        {
+            var num = await People.CountAsync();
+            return num;
         }
     }
 }

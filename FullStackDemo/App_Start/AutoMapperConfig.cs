@@ -8,7 +8,7 @@ namespace FullStackDemo.App_Start
     {
         public static void DoMappings()
         {
-            Mapper.Initialize(cfg => cfg.CreateMap<Person, PersonDTO>());
+            Mapper.Initialize(cfg => cfg.CreateMap<Person, PersonDTO>().ReverseMap());  // both directions
         }
     }
 }

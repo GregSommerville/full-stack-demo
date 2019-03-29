@@ -159,6 +159,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\DAL\AddPerson.cs" />
     <Compile Include="Models\DAL\DBInitializer.cs" />
     <Compile Include="Models\DAL\GetNumberOfPeople.cs" />
     <Compile Include="Models\DAL\GetPeopleMatching.cs" />

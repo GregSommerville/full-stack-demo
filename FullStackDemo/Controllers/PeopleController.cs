@@ -2,6 +2,7 @@
 using FullStackDemo.Models.RequestHandlers;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace FullStackDemo.Controllers
@@ -9,21 +10,24 @@ namespace FullStackDemo.Controllers
     public class PeopleController : ApiController
     {
         [HttpGet]
-        public int Get()
+        public async Task<int> Get()
         {
-            return PeopleRequests.GetNumberOfPeople();
+            int numPeople = await PeopleRequests.GetNumberOfPeopleAsync();
+            return numPeople;
         }
 
         [HttpGet]
-        public List<PersonDTO> Get(string pattern)
+        public async Task<List<PersonDTO>> Get(string pattern)
         {
-            return PeopleRequests.GetPeopleMatching(pattern);
+            var people = await PeopleRequests.GetPeopleMatchingAsync(pattern);
+            return people;
         }
 
         [HttpPost]
-        public void Post([FromBody]string value)
+        public async Task<string> Post([FromBody]PersonDTO person)
         {
-            throw new HttpResponseException(HttpStatusCode.BadRequest);
+            var result = await PeopleRequests.AddPersonAsync(person);
+            return result;
         }
 
         [HttpPut]

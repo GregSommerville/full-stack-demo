@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FullStackDemo.Models.DAL
 {
@@ -14,6 +16,16 @@ namespace FullStackDemo.Models.DAL
                     p.FirstName.Contains(pattern) || 
                     p.LastName.Contains(pattern))
                 .ToList();
+        }
+
+        public async Task<List<Person>> GetPeopleMatchingAsync(string pattern)
+        {
+            var people = await People
+                .Where(p =>
+                    p.FirstName.Contains(pattern) ||
+                    p.LastName.Contains(pattern))
+                .ToListAsync();
+            return people;
         }
     }
 }
