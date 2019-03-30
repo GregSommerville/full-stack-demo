@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "umd",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "jsx": "react",
+    "outDir": "../JS/"
+  },
+  "exclude": [
+    "node_modules",
+    "wwwroot"
+  ]
+}
