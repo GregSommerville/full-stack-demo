@@ -1,6 +1,5 @@
 ﻿using FullStackDemo.Models.DAL;
 using FullStackDemo.Models.DTOs;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,16 +8,6 @@ namespace FullStackDemo.Models.RequestHandlers
     // Business Logic, one class per controller
     public class PeopleRequests
     {
-        // simple GET returns the number of people in the DB
-        public async static Task<int> GetNumberOfPeopleAsync()
-        {
-            using (var context = new PeopleContext())
-            {
-                var num = await context.GetNumberOfPeopleAsync();
-                return num;
-            }
-        }
-
         // GET with a string returns all people that match that in first or last name
         public async static Task<List<PersonDTO>> GetPeopleMatchingAsync(string pattern)
         {

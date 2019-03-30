@@ -156,6 +156,7 @@
     <Compile Include="App_Start\AutoMapperConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\PeopleController.cs" />
+    <Compile Include="Controllers\PeopleCountController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -166,6 +167,7 @@
     <Compile Include="Models\DAL\PeopleContext.cs" />
     <Compile Include="Models\DAL\Person.cs" />
     <Compile Include="Models\DTOs\PersonDTO.cs" />
+    <Compile Include="Models\RequestHandlers\PeopleCountRequests.cs" />
     <Compile Include="Models\RequestHandlers\PeopleRequests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
