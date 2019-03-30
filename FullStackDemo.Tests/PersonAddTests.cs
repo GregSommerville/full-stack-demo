@@ -19,6 +19,8 @@ namespace FullStackDemo.Tests
                 try
                 {
                     context.AddPerson(newPerson);
+                    context.SaveChanges();
+
                     // should throw an exception
                     Assert.Fail();
                 }
@@ -42,6 +44,7 @@ namespace FullStackDemo.Tests
                 try
                 {
                     context.AddPerson(newPerson);
+                    context.SaveChanges();
                 }
                 catch
                 {
