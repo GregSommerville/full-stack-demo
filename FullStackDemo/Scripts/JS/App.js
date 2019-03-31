@@ -14,13 +14,19 @@
     ReactDOM.render(React.createElement(App, null), document.getElementById("reactContainer"));
     function App() {
         var _a = React.useState(true), isShowingSearch = _a[0], setShowingSearch = _a[1];
+        var _b = React.useState(''), seachString = _b[0], setSearchString = _b[1];
         function onStateButtonClick(newState) {
             setShowingSearch(newState);
+        }
+        function onSearchStringChanged(searchPattern) {
+            console.log("search for " + searchPattern);
+            setSearchString(searchPattern);
+            // api call to get the matches
         }
         if (isShowingSearch) {
             return (React.createElement(React.Fragment, null,
                 React.createElement(ModeControl, { showingSearch: isShowingSearch, onClick: onStateButtonClick }),
-                React.createElement(SearchControl, null)));
+                React.createElement(SearchControl, { onChange: onSearchStringChanged })));
         }
         else {
             return (React.createElement(React.Fragment, null,
@@ -41,9 +47,13 @@
                 React.createElement("button", { type: "button", className: addClasses, onClick: function () { return props.onClick(false); } }, "Add Person"))));
     }
     function SearchControl(props) {
+        var onChange = function (e) {
+            // extract the string and send it back via the callback
+            props.onChange(e.target.value);
+        };
         return (React.createElement("div", { className: 'form-group' },
             "Find:",
-            React.createElement("input", { type: "text", className: "form-control", id: "txtSearch", placeholder: 'type letters to search for' })));
+            React.createElement("input", { type: "search", className: "form-control", id: "txtSearch", onChange: function (e) { return onChange(e); }, placeholder: 'type letters to search for' })));
     }
     function NewPerson(props) {
         return (React.createElement("form", null,
