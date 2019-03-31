@@ -3,20 +3,37 @@ import * as ReactDOM from "react-dom";
 
 ReactDOM.render(<App />, document.getElementById("reactContainer"));
 
+interface IPerson {
+    firstName: string;
+    lastName: string;
+    address: string;
+    age: number;
+    portraitURL: string;
+    interests: string;
+}
 
 function App() {
     const [isShowingSearch, setShowingSearch] = React.useState(true);
     const [seachString, setSearchString] = React.useState('');
+    const [searchResults, setSearchResults] = React.useState<IPerson[]>([]);
 
     function onStateButtonClick(newState: boolean): void {
         setShowingSearch(newState);
     }
 
     function onSearchStringChanged(searchPattern: string): void {
-        console.log(`search for ${searchPattern}`);
         setSearchString(searchPattern);
 
         // api call to get the matches
+        if (searchPattern) {
+            api<IPerson[]>(`api/People/${searchPattern}`)
+                .then((response) => {
+                    setSearchResults(response);
+                })
+                .catch(error => console.error(error));
+        } else {
+            setSearchResults([]);
+        }        
     }
 
     if (isShowingSearch) {
@@ -24,6 +41,7 @@ function App() {
             <>
                 <ModeControl showingSearch={isShowingSearch} onClick={onStateButtonClick} />
                 <SearchControl onChange={onSearchStringChanged} />
+                <SearchResults results={searchResults} />
             </>
         );
     }
@@ -72,6 +90,39 @@ function SearchControl(props) {
         );
 }
 
+function SearchResults(props) {
+    const people = props.results as IPerson[];
+    return (
+        <div className='container' >
+            <div className='row'>
+                {people.map(person => <SearchResult {...person} />)}
+            </div>
+        </div>
+        );
+}
+
+function SearchResult(props: IPerson) {
+    return (
+        <div className='col-sm-6 col-md-4 col-lg-3'>
+            <div className='personCard'>
+                <div className='card'>
+                    <img src={props.portraitURL} className='card-img-top' />
+                    <div className='card-body'>
+                        <div className='card-title'>
+                            <span className='personName'>{props.firstName} {props.lastName}</span>
+                        </div>
+                        <div className='card-text'>
+                            <div className='personAddress'>{props.address}</div>
+                            <div className='personAge'>Age: {props.age}</div>
+                            <div className='personInterests'>Interests: {props.interests}</div>
+                        </div>
+                    </div>
+                </div >
+            </div>
+        </div>
+        );
+}
+
 function NewPerson(props) {
     return (
         <form>
@@ -102,4 +153,14 @@ function NewPerson(props) {
             <button type="submit" className='btn btn-primary'>Submit</button>
         </form>
     );
+}
+
+function api<T>(url: string): Promise<T> {
+    return fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(response.statusText)
+            }
+            return response.json().then(data => data as T);
+        })
 }

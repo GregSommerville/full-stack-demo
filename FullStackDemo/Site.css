@@ -1,6 +1,7 @@
 ﻿body {
     padding-top: 50px;
     padding-bottom: 20px;
+    background-color: lightgray;
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -23,4 +24,32 @@
 
 .appModeSwitcher {
     padding-bottom: 20px;
+}
+
+.personCard {
+    border: 1px solid black;
+    margin-bottom: 10px;
+    background-color: white;
+}
+
+.personName {
+    font-weight:bold;
+    font-size: medium;
+}
+
+.personAddress {
+    font-size: small;
+    line-height: 1em;
+    margin-bottom: 5px;
+    margin-top: 0;
+}
+
+.personAge {
+    font-size: small;
+    margin-bottom: 5px;
+}
+
+.personInterests {
+    font-size: small;
+    line-height: 1em;
 }
