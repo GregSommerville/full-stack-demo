@@ -35,7 +35,7 @@ function App() {
                 .catch(error => console.error(error));
         } else {
             setSearchResults([]);
-        }        
+        }
     }
 
     function api<T>(url: string): Promise<T> {
@@ -57,9 +57,9 @@ function App() {
             <ModeControl showingSearch={isShowingSearch} onClick={onStateButtonClick} />
             {isShowingSearch && <SearchControl onChange={onSearchStringChanged} isWaiting={isWaiting} />}
             {showSearchResults && <SearchResults results={searchResults} />}
-            {!isShowingSearch && <NewPerson /> }
+            {!isShowingSearch && <NewPerson />}
         </>
-    );    
+    );
 }
 
 function ModeControl(props) {
@@ -82,22 +82,21 @@ function ModeControl(props) {
 
 function SearchControl(props) {
 
-    const onChange = (e) => {
-        // extract the string and send it back via the callback
+    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         props.onChange(e.target.value);
     };
 
     return (
         <div className='form-group'>
-            Find: 
+            Find:
             <input type="search" className="form-control" id="txtSearch"
                 onChange={(e) => onChange(e)}
                 placeholder='type letters to search for' />
-            {props.isWaiting &&                 
+            {props.isWaiting &&
                 <div className='alert alert-info top-margin'>Waiting for response...</div>
             }
         </div>
-        );
+    );
 }
 
 function SearchResults(props) {
@@ -114,7 +113,7 @@ function SearchResults(props) {
                 {people.map(person => <SearchResult {...person} />)}
             </div>
         </div>
-        );
+    );
 }
 
 function SearchResult(props: IPerson) {
@@ -136,37 +135,141 @@ function SearchResult(props: IPerson) {
                 </div >
             </div>
         </div>
-        );
+    );
 }
 
 function NewPerson(props) {
+    const [firstName, setFirstName] = React.useState('');
+    const [lastName, setLastName] = React.useState('');
+    const [address, setAddress] = React.useState('');
+    const [age, setAge] = React.useState('');
+    const [interests, setInterests] = React.useState('');
+    const [portraitURL, setPortraitURL] = React.useState('');
+    const [validationErrorsFound, setValidationErrorsFound] = React.useState(false);
+    const [submitMessage, setSubmitMessage] = React.useState('');
+
+    function updateFirstName(e: React.ChangeEvent<HTMLInputElement>): void {
+        var element = e.target as HTMLInputElement;
+        setFirstName(element.value);
+    }
+
+    function updateLastName(e: React.ChangeEvent<HTMLInputElement>): void {
+        var element = e.target as HTMLInputElement;
+        setLastName(element.value);
+    }
+
+    function updateAddress(e: React.ChangeEvent<HTMLInputElement>): void {
+        var element = e.target as HTMLInputElement;
+        setAddress(element.value);
+    }
+
+    function updateAge(e: React.ChangeEvent<HTMLInputElement>): void {
+        var element = e.target as HTMLInputElement;
+        setAge(element.value);
+    }
+
+    function updateInterests(e: React.ChangeEvent<HTMLInputElement>): void {
+        var element = e.target as HTMLInputElement;
+        setInterests(element.value);
+    }
+
+    function updatePortraitURL(e: React.ChangeEvent<HTMLInputElement>): void {
+        var element = e.target as HTMLInputElement;
+        setPortraitURL(element.value);
+    }
+
+    function isValidForm(): boolean {
+        return firstName.length > 0 && lastName.length > 0;
+    }
+
+    function onSubmit(e: React.FormEvent): void {
+        e.preventDefault();
+        
+        if (isValidForm()) {
+            setValidationErrorsFound(false);
+            const ageAsNum: number = +age;  // unary conversion
+            const payload: IPerson = { firstName, lastName, address, age: ageAsNum, interests, portraitURL };
+            apiPost<IPerson>('api/People/', payload)
+                .then(() => {
+                    setFirstName('');
+                    setLastName('');
+                    setAddress('');
+                    setAge('');
+                    setInterests('');
+                    setPortraitURL('');
+                    setSubmitMessage('Person was added successfully');
+                })
+                .catch(error => console.error(error));
+
+        } else {
+            setValidationErrorsFound(true);
+        }
+    }
+
+    function apiPost<T>(url: string, payload: IPerson): Promise<T> {
+        return fetch(url,
+            {
+                method: "POST",
+                body: JSON.stringify(payload),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(response.statusText)
+                }
+                return response.json().then(data => data as T);
+            });
+    }
+
+    function ValidationErrorMessage() {
+        return (
+            <div className='alert alert-dark'>
+                You must enter a first and last name
+        </div>
+        );
+    }
+
+    function ConfirmationMessage(props) {
+        return (
+            <div className='alert alert-secondary'>
+                {props.message}
+            </div>
+        );
+    }
+
     return (
-        <form>
-            <div className='form-group'>
-                <label htmlFor='FirstName'>First Name:</label>
-                <input type="text" className="form-control" id="FirstName" />
-            </div>
-            <div className='form-group'>
-                <label htmlFor='LastName'>Last Name:</label>
-                <input type="text" className="form-control" id="LastName" />
-            </div>
-            <div className='form-group'>
-                <label htmlFor='Address'>Address:</label>
-                <input type="text" className="form-control" id="Address" />
-            </div>
-            <div className='form-group'>
-                <label htmlFor='Age'>Age:</label>
-                <input type="text" className="form-control" id="Age" />
-            </div>
-            <div className='form-group'>
-                <label htmlFor='Interests'>Interests:</label>
-                <input type="text" className="form-control" id="Interests" />
-            </div>
-            <div className='form-group'>
-                <label htmlFor='PortraitURL'>Portrait URL:</label>
-                <input type="text" className="form-control" id="PortraitURL" />
-            </div>
-            <button type="submit" className='btn btn-primary'>Submit</button>
-        </form>
+        <>
+            <form onSubmit={onSubmit}>
+                <div className='form-group'>
+                    <label htmlFor='FirstName'>First Name:</label>
+                    <input type="text" className="form-control" id="FirstName" value={firstName} onChange={updateFirstName} />
+                </div>
+                <div className='form-group'>
+                    <label htmlFor='LastName'>Last Name:</label>
+                    <input type="text" className="form-control" id="LastName" value={lastName} onChange={updateLastName} />
+                </div>
+                <div className='form-group'>
+                    <label htmlFor='Address'>Address:</label>
+                    <input type="text" className="form-control" id="Address" value={address} onChange={updateAddress} />
+                </div>
+                <div className='form-group'>
+                    <label htmlFor='Age'>Age:</label>
+                    <input type="text" className="form-control" id="Age" value={age} onChange={updateAge} />
+                </div>
+                <div className='form-group'>
+                    <label htmlFor='Interests'>Interests:</label>
+                    <input type="text" className="form-control" id="Interests" value={interests} onChange={updateInterests} />
+                </div>
+                <div className='form-group'>
+                    <label htmlFor='PortraitURL'>Portrait URL:</label>
+                    <input type="text" className="form-control" id="PortraitURL" value={portraitURL} onChange={updatePortraitURL} />
+                </div>
+                <button type="submit" className='btn btn-primary'>Submit</button>
+            </form>
+            {validationErrorsFound && <ValidationErrorMessage />}
+            {submitMessage.length > 0 && <ConfirmationMessage message={submitMessage} />}
+        </>
     );
 }
