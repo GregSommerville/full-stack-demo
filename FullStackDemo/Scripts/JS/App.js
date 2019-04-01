@@ -25,14 +25,15 @@ var __assign = (this && this.__assign) || function () {
     ReactDOM.render(React.createElement(App, null), document.getElementById("reactContainer"));
     function App() {
         var _a = React.useState(true), isShowingSearch = _a[0], setShowingSearch = _a[1];
-        var _b = React.useState(''), seachString = _b[0], setSearchString = _b[1];
+        var _b = React.useState(''), searchString = _b[0], setSearchString = _b[1];
         var _c = React.useState([]), searchResults = _c[0], setSearchResults = _c[1];
+        var _d = React.useState(false), isWaiting = _d[0], setIsWaiting = _d[1];
+        var showSearchResults = !isWaiting && isShowingSearch && searchString;
         function onStateButtonClick(newState) {
             setShowingSearch(newState);
         }
         function onSearchStringChanged(searchPattern) {
             setSearchString(searchPattern);
-            // api call to get the matches
             if (searchPattern) {
                 api("api/People/" + searchPattern)
                     .then(function (response) {
@@ -44,17 +45,22 @@ var __assign = (this && this.__assign) || function () {
                 setSearchResults([]);
             }
         }
-        if (isShowingSearch) {
-            return (React.createElement(React.Fragment, null,
-                React.createElement(ModeControl, { showingSearch: isShowingSearch, onClick: onStateButtonClick }),
-                React.createElement(SearchControl, { onChange: onSearchStringChanged }),
-                React.createElement(SearchResults, { results: searchResults })));
+        function api(url) {
+            setIsWaiting(true);
+            return fetch(url)
+                .then(function (response) {
+                setIsWaiting(false);
+                if (!response.ok) {
+                    throw new Error(response.statusText);
+                }
+                return response.json().then(function (data) { return data; });
+            });
         }
-        else {
-            return (React.createElement(React.Fragment, null,
-                React.createElement(ModeControl, { showingSearch: isShowingSearch, onClick: onStateButtonClick }),
-                React.createElement(NewPerson, null)));
-        }
+        return (React.createElement(React.Fragment, null,
+            React.createElement(ModeControl, { showingSearch: isShowingSearch, onClick: onStateButtonClick }),
+            isShowingSearch && React.createElement(SearchControl, { onChange: onSearchStringChanged, isWaiting: isWaiting }),
+            showSearchResults && React.createElement(SearchResults, { results: searchResults }),
+            !isShowingSearch && React.createElement(NewPerson, null)));
     }
     function ModeControl(props) {
         var searchClasses = "btn btn-primary active";
@@ -75,10 +81,15 @@ var __assign = (this && this.__assign) || function () {
         };
         return (React.createElement("div", { className: 'form-group' },
             "Find:",
-            React.createElement("input", { type: "search", className: "form-control", id: "txtSearch", onChange: function (e) { return onChange(e); }, placeholder: 'type letters to search for' })));
+            React.createElement("input", { type: "search", className: "form-control", id: "txtSearch", onChange: function (e) { return onChange(e); }, placeholder: 'type letters to search for' }),
+            props.isWaiting &&
+                React.createElement("div", { className: 'alert alert-info top-margin' }, "Waiting for response...")));
     }
     function SearchResults(props) {
         var people = props.results;
+        if (people.length == 0) {
+            return (React.createElement("span", null, "No matching people found"));
+        }
         return (React.createElement("div", { className: 'container' },
             React.createElement("div", { className: 'row' }, people.map(function (person) { return React.createElement(SearchResult, __assign({}, person)); }))));
     }
@@ -123,15 +134,6 @@ var __assign = (this && this.__assign) || function () {
                 React.createElement("label", { htmlFor: 'PortraitURL' }, "Portrait URL:"),
                 React.createElement("input", { type: "text", className: "form-control", id: "PortraitURL" })),
             React.createElement("button", { type: "submit", className: 'btn btn-primary' }, "Submit")));
-    }
-    function api(url) {
-        return fetch(url)
-            .then(function (response) {
-            if (!response.ok) {
-                throw new Error(response.statusText);
-            }
-            return response.json().then(function (data) { return data; });
-        });
     }
 });
 //# sourceMappingURL=App.js.map

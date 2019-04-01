@@ -14,8 +14,11 @@ interface IPerson {
 
 function App() {
     const [isShowingSearch, setShowingSearch] = React.useState(true);
-    const [seachString, setSearchString] = React.useState('');
+    const [searchString, setSearchString] = React.useState('');
     const [searchResults, setSearchResults] = React.useState<IPerson[]>([]);
+    const [isWaiting, setIsWaiting] = React.useState(false);
+
+    const showSearchResults = !isWaiting && isShowingSearch && searchString;
 
     function onStateButtonClick(newState: boolean): void {
         setShowingSearch(newState);
@@ -24,7 +27,6 @@ function App() {
     function onSearchStringChanged(searchPattern: string): void {
         setSearchString(searchPattern);
 
-        // api call to get the matches
         if (searchPattern) {
             api<IPerson[]>(`api/People/${searchPattern}`)
                 .then((response) => {
@@ -36,23 +38,28 @@ function App() {
         }        
     }
 
-    if (isShowingSearch) {
-        return (
-            <>
-                <ModeControl showingSearch={isShowingSearch} onClick={onStateButtonClick} />
-                <SearchControl onChange={onSearchStringChanged} />
-                <SearchResults results={searchResults} />
-            </>
-        );
+    function api<T>(url: string): Promise<T> {
+        setIsWaiting(true);
+
+        return fetch(url)
+            .then(response => {
+                setIsWaiting(false);
+
+                if (!response.ok) {
+                    throw new Error(response.statusText)
+                }
+                return response.json().then(data => data as T);
+            })
     }
-    else {
-        return (
-            <>
-                <ModeControl showingSearch={isShowingSearch} onClick={onStateButtonClick} />
-                <NewPerson />
-            </>
-        );
-    }
+
+    return (
+        <>
+            <ModeControl showingSearch={isShowingSearch} onClick={onStateButtonClick} />
+            {isShowingSearch && <SearchControl onChange={onSearchStringChanged} isWaiting={isWaiting} />}
+            {showSearchResults && <SearchResults results={searchResults} />}
+            {!isShowingSearch && <NewPerson /> }
+        </>
+    );    
 }
 
 function ModeControl(props) {
@@ -86,12 +93,21 @@ function SearchControl(props) {
             <input type="search" className="form-control" id="txtSearch"
                 onChange={(e) => onChange(e)}
                 placeholder='type letters to search for' />
+            {props.isWaiting &&                 
+                <div className='alert alert-info top-margin'>Waiting for response...</div>
+            }
         </div>
         );
 }
 
 function SearchResults(props) {
     const people = props.results as IPerson[];
+    if (people.length == 0) {
+        return (
+            <span>No matching people found</span>
+        );
+    }
+
     return (
         <div className='container' >
             <div className='row'>
@@ -153,14 +169,4 @@ function NewPerson(props) {
             <button type="submit" className='btn btn-primary'>Submit</button>
         </form>
     );
-}
-
-function api<T>(url: string): Promise<T> {
-    return fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(response.statusText)
-            }
-            return response.json().then(data => data as T);
-        })
 }

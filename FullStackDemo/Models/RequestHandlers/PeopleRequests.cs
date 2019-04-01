@@ -11,6 +11,11 @@ namespace FullStackDemo.Models.RequestHandlers
         // GET with a string returns all people that match that in first or last name
         public async static Task<List<PersonDTO>> GetPeopleMatchingAsync(string pattern)
         {
+            if (pattern.Equals("slowtest"))
+            {
+                System.Threading.Thread.Sleep(5000);
+            }
+
             using (var context = new PeopleContext())
             {
                 var people = await context.GetPeopleMatchingAsync(pattern);
