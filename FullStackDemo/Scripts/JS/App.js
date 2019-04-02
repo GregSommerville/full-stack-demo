@@ -64,9 +64,9 @@ var __assign = (this && this.__assign) || function () {
     }
     function ModeControl(props) {
         var searchClasses = "btn btn-primary active";
-        var addClasses = "btn btn-secondary";
+        var addClasses = "btn btn-dark";
         if (!props.showingSearch) {
-            searchClasses = "btn btn-secondary";
+            searchClasses = "btn btn-dark";
             addClasses = "btn btn-primary active";
         }
         return (React.createElement("div", { className: 'appModeSwitcher' },

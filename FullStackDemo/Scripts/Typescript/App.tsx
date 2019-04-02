@@ -64,9 +64,9 @@ function App() {
 
 function ModeControl(props) {
     let searchClasses: string = "btn btn-primary active";
-    let addClasses: string = "btn btn-secondary";
+    let addClasses: string = "btn btn-dark";
     if (!props.showingSearch) {
-        searchClasses = "btn btn-secondary";
+        searchClasses = "btn btn-dark";
         addClasses = "btn btn-primary active";
     }
 
