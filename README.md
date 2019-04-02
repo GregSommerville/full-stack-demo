@@ -7,6 +7,7 @@ This repo contains the code for a simple demonstration full stack application.  
 - AutoMapper 
 - React 
 - TypeScript
+- Bootstrap
 
 I wanted to keep this demonstration as simple as possible, so I didn't use WebPack, didn't worry about minimizing and bundling JavaScript files, and didn't use a JavaScript module loader system like RequireJS.  
 

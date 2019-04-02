@@ -244,27 +244,27 @@ function NewPerson(props) {
             <form onSubmit={onSubmit}>
                 <div className='form-group'>
                     <label htmlFor='FirstName'>First Name:</label>
-                    <input type="text" className="form-control" id="FirstName" value={firstName} onChange={updateFirstName} />
+                    <input type="text" className="form-control" id="FirstName" value={firstName} onChange={updateFirstName} maxLength={25} />
                 </div>
                 <div className='form-group'>
                     <label htmlFor='LastName'>Last Name:</label>
-                    <input type="text" className="form-control" id="LastName" value={lastName} onChange={updateLastName} />
+                    <input type="text" className="form-control" id="LastName" value={lastName} onChange={updateLastName} maxLength={25}  />
                 </div>
                 <div className='form-group'>
                     <label htmlFor='Address'>Address:</label>
-                    <input type="text" className="form-control" id="Address" value={address} onChange={updateAddress} />
+                    <input type="text" className="form-control" id="Address" value={address} onChange={updateAddress} maxLength={100}  />
                 </div>
                 <div className='form-group'>
                     <label htmlFor='Age'>Age:</label>
-                    <input type="text" className="form-control" id="Age" value={age} onChange={updateAge} />
+                    <input type="number" className="form-control" id="Age" value={age} onChange={updateAge} maxLength={5} min={1} max={100}  />
                 </div>
                 <div className='form-group'>
                     <label htmlFor='Interests'>Interests:</label>
-                    <input type="text" className="form-control" id="Interests" value={interests} onChange={updateInterests} />
+                    <input type="text" className="form-control" id="Interests" value={interests} onChange={updateInterests} maxLength={1000} />
                 </div>
                 <div className='form-group'>
                     <label htmlFor='PortraitURL'>Portrait URL:</label>
-                    <input type="text" className="form-control" id="PortraitURL" value={portraitURL} onChange={updatePortraitURL} />
+                    <input type="text" className="form-control" id="PortraitURL" value={portraitURL} onChange={updatePortraitURL} maxLength={200} />
                 </div>
                 <button type="submit" className='btn btn-primary'>Submit</button>
             </form>
