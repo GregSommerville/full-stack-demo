@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "name": "full_stack_demo",
+  "author": "Greg Sommerville",
+  "description": "Demo of a full-stack application",
+  "private": true,
+  "dependencies": {
+    "react": "^16.8",
+    "react-dom": "^16.8"
+  }
+}
