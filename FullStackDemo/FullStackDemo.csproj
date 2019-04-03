@@ -185,7 +185,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="package.json" />
+    <None Include=".bin\git.cmd" />
     <None Include=".bin\node.cmd" />
+    <None Include=".bin\npm.cmd" />
     <None Include="packages.config" />
     <Content Include="Scripts\Typescript\tsconfig.json" />
   </ItemGroup>
@@ -230,10 +232,11 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
   </Target>
+  <Target Name="BeforeBuild">
+  <Exec Command=".bin\npm install" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
   <Target Name="AfterBuild">
   </Target> -->
 </Project>
